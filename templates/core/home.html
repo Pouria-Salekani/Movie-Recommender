@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href='{% static "core/styles.css"%}'> 
+
     <title>Document</title>
 </head>
 
 
 <body>
-    <h1>hello</h1>
-
+    <h1>My Dataframe</h1>
+    {{ table_html|safe }}
 
 </body>
+
+
 </html>
