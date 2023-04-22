@@ -1,0 +1,44 @@
+{% extends 'home.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href='{% static "core/search.css"%}'> 
+
+    <title>Document</title>
+</head>
+<body>
+    <h1 style="color: white;">WEEE</h1>
+
+    <div class="grid-container">
+        <label for="color1">
+            Option 1
+            <input type="checkbox" id="option-1" name="inputName[]">
+        </label>
+        <label for="color2">
+            Option 2
+            <input type="checkbox" id="option-2" name="inputName[]">
+        </label>
+        <label for="color3">
+            Option 3
+            <input type="checkbox" id="option-3" name="inputName[]">
+        </label>
+        <label for="color4">
+            Option 4
+            <input type="checkbox" id="option-4" name="inputName[]">
+        </label>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+    </div>
+      
+
+
+</body>
+</html>
+
+
+{% endblock %}

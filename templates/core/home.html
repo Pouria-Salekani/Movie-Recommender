@@ -10,10 +10,35 @@
 
 
 <body>
-    <h1>My Dataframe</h1>
-    {{ table_html|safe }}
+    
+    <div class="lines">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+
+    <!-- <h1 style="text-align: center;">My Dataframe</h1>
+    {{ table_html|safe }} -->
+
+    {% block content %}
+
+    <div class="text-div">
+        <h1 style="color: white; font-family: Franklin Gothic Medium,Franklin Gothic,ITC Franklin Gothic,Arial,sans-serif; font-size: 50px;">
+            Enter the model you want to use to recommend you movies</h1>
+    </div>
+    
+
+    <div class="wrapper">
+        <a href="{% url 'search' %}?option=1"><button class="button-80" role="button">Default</button></a>
+        <a href="{% url 'search' %}?option=2"><button class="button-80" role="button">Ekman</button></a>
+        <a href="{% url 'search' %}?option=3"><button class="button-80" role="button">EmoRoberta</button></a>
+        <a href="{% url 'search' %}?option=4"><button class="button-80" role="button">NRCLex</button></a>
+
+    </div>
 
 </body>
 
-
 </html>
+
+{% endblock %}
+
