@@ -27,23 +27,68 @@ for index, value in df['genres'].items():
   else:
      df.loc[index, 'genres'] = 'none'
 
-
 df['emotions'] = None
 
 
+def read_user_emotion(text):
+    from transformers import pipeline
+    # tokenizer = RobertaTokenizerFast.from_pretrained("arpanghoshal/EmoRoBERTa")
+    # model = TFRobertaForSequenceClassification.from_pretrained("arpanghoshal/EmoRoBERTa")
+
+    emotion = pipeline('sentiment-analysis', 
+                        model='arpanghoshal/EmoRoBERTa')
+
+    emotion_labels = emotion(text)
+    
+    return emotion_labels
+
+
 def recommend_movie(model_df, text):
-    text = text[text.rfind(' ')+1:]
+    emotion_index = -1
+
+    #the user text
+    # text = text[text.rfind(' ')+1:]
+    user_text = read_user_emotion(text)
+    text = user_text[0]['label']
+
+    #responsible for printing out titles
+    temp_df = model_df
+
 
     #dtype: object, only these r needed
     model_df = model_df['title'] + ' ' +model_df['genres'] + ' ' +model_df['emotions']
 
+
     #below we will find the first instance of the user emotion...
+    for i, value in enumerate(model_df):
+        cur_value = model_df[i]
+
+        if not pd.isna(value):
+            emotion = cur_value[cur_value.rfind(' ')+1:]
+
+        if emotion == text:
+            emotion_index = i
+            break
+
     
     vector = TfidfVectorizer()
     fit_vector = vector.fit_transform(model_df)
 
     similar = cosine_similarity(fit_vector)
-    similarity_score = list(enumerate(similar[index]))
+    similarity_score = list(enumerate(similar[emotion_index]))
+    #want the most relevant; highest score closest to 1.000
+    sorted_score = sorted(similarity_score, key = lambda i:-i[1])
+
+
+    #print out top 15 movies
+    movie = 0
+    for i, value in sorted_score:
+        print(temp_df.loc[i, 'title'])
+
+        movie += 1
+        if movie == 15:
+            break
+
 
 
 # #gets the text from user, cleans it up, and passes it to 'recommend_movies()'
@@ -55,9 +100,6 @@ def recommend_movie(model_df, text):
 
 #     recommend_movie(None, text)
 
-
-
-user_emotion('lo')
 
 
 def nrclex_model(user_text):
@@ -166,6 +208,7 @@ def movie_emo_model(user_text):
     recommend_movie(movie_emo_df, user_text)
 
 
+movie_emo_model('i am feeling curious')
 
 
 #already preprocessed data; so will read from csv
