@@ -23,7 +23,7 @@ def search(request):
     print('OPTION PICKED = ', option)
 
     if request.method == 'POST':
-        print('form submitted')
+        print('form submitted at option: ', option)
 
 
     return render(request, 'search.html')

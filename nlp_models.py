@@ -11,23 +11,28 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-#first read the csv and do some cleaning
-df = pd.read_csv('/movie_proj/models_csvs/movies.csv')
 
-#used for nrclex, emo, and ekman only
-for index, value in df['genres'].items():
-  if not pd.isna(value):
-      ex1 = value.split()
-      if ex1:
-        if len(ex1) > 1 and ex1[1] == 'am':
-          continue
-        else:
-          df.loc[index, 'genres'] = 'I am feeling ' + ex1[0].lower()
+def clean_up_df():
 
-  else:
-     df.loc[index, 'genres'] = 'none'
+    #first read the csv and do some cleaning
+    df = pd.read_csv('/movie_proj/models_csvs/movies.csv')
 
-df['emotions'] = None
+    #used for nrclex, emo, and ekman only
+    for index, value in df['genres'].items():
+        if not pd.isna(value):
+            ex1 = value.split()
+        if ex1:
+            if len(ex1) > 1 and ex1[1] == 'am':
+                continue
+            else:
+                df.loc[index, 'genres'] = 'I am feeling ' + ex1[0].lower()
+
+    else:
+        df.loc[index, 'genres'] = 'none'
+
+    df['emotions'] = None
+
+    return df
 
 
 def read_user_emotion(text):
@@ -47,7 +52,6 @@ def recommend_movie(model_df, text):
     emotion_index = -1
 
     #the user text
-    # text = text[text.rfind(' ')+1:]
     user_text = read_user_emotion(text)
     text = user_text[0]['label']
 
@@ -103,7 +107,7 @@ def recommend_movie(model_df, text):
 
 
 def nrclex_model(user_text):
-    nrc_df = df
+    nrc_df = clean_up_df()
 
     for index, value in nrc_df['genres'].items():
         text = value
