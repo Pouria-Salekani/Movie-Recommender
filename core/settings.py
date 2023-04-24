@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sass_processor',
+    'whitenoise.runserver_nostatic',
 ]
 
 STATICFILES_FINDERS = [
@@ -38,6 +39,7 @@ STATICFILES_FINDERS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,7 +53,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['D:/movie_proj/templates/core'],
+        'DIRS': ['/movie_proj/templates/core'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

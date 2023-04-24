@@ -1,0 +1,36 @@
+<!-- {% extends 'home.html' %}
+{% block content %} -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href='{% static "core/results.css"%}'> 
+
+    <title>Recommender</title>
+</head>
+
+
+<body>
+
+
+    <div class="grid">
+        {% for movie in movies %}
+            <h2>{{movie}}</h2>
+        {% endfor %}
+            <h2><a href="{% url 'home' %}" style="color: white;"><i>Click me to use another model!</i></a></h2>
+    </div>
+
+    <footer>
+        <div class="centered">Detailed documentation at: <a href="https://github.com/Pouria-Salekani/Movie-Recommender" target="_blank">GitHub</a></div>
+    </footer>
+
+    
+</body>
+
+
+</html>
+
+
+<!-- {% endblock %} -->

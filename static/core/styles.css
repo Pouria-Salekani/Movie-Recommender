@@ -76,9 +76,6 @@ body {
 
 /*# sourceMappingURL=styles.css.map */
 
-/* <!-- HTML !-->
-<button class="button-80" role="button">Button 80</button> */
-
 /* CSS */
 .button-80 {
   background: #fff;
@@ -90,7 +87,7 @@ body {
   color: #212121;
   cursor: pointer;
   display: inline-block;
-  font-family: Franklin Gothic Medium,Franklin Gothic,ITC Franklin Gothic,Arial,sans-serif; 
+  font-family: "Poppins", sans-serif; 
   font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: -.01em;
@@ -160,3 +157,4 @@ body {
   padding-top: 280px;
 
 }
+

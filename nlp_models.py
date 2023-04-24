@@ -1,16 +1,22 @@
+'''
 
-#this is where all the code will go
+To see how the ekman and emoRoberta model were processed, please go to 'computation.py'
+To see how the accuracy testing was done, please go to 'training.py'
 
-#4 separate methods for each model (once done, each method calls the recommend_movie())
-#1 method for finding the movie cosine and stuff
+NONE OF THOSE SCRIPTS ABOVE WERE USED (IN VS CODE), THOSE FILES ARE THERE JUST TO SHOW YOU THE PROCESS AND THE ACCURACY TESTING
 
-#then return to views.py by importing this class
+'''
+
+
 from nrclex import NRCLex
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from transformers import pipeline
+from core import emotion_model
 
-
+#stores movies
+movies = []
 
 def clean_up_df():
 
@@ -36,14 +42,7 @@ def clean_up_df():
 
 
 def read_user_emotion(text):
-    from transformers import pipeline
-    # tokenizer = RobertaTokenizerFast.from_pretrained("arpanghoshal/EmoRoBERTa")
-    # model = TFRobertaForSequenceClassification.from_pretrained("arpanghoshal/EmoRoBERTa")
-
-    emotion = pipeline('sentiment-analysis', 
-                        model='arpanghoshal/EmoRoBERTa')
-
-    emotion_labels = emotion(text)
+    emotion_labels = emotion_model(text)
     
     return emotion_labels
 
@@ -58,8 +57,7 @@ def recommend_movie(model_df, text):
     #responsible for printing out titles
     temp_df = model_df
 
-
-    #dtype: object, only these r needed
+    #dtype: object, only these are needed
     model_df = model_df['title'] + ' ' +model_df['genres'] + ' ' +model_df['emotions']
 
 
@@ -87,23 +85,11 @@ def recommend_movie(model_df, text):
     #print out top 15 movies
     movie = 0
     for i, value in sorted_score:
-        print(temp_df.loc[i, 'title'])
+        movies.append(temp_df.loc[i, 'title'])
 
         movie += 1
         if movie == 15:
             break
-
-
-
-# #gets the text from user, cleans it up, and passes it to 'recommend_movies()'
-# def user_emotion(text):
-#     text = 'I am feeling happy'
-
-#     text = text[text.rfind(' ')+1:]
-#     #print(text)
-
-#     recommend_movie(None, text)
-
 
 
 def nrclex_model(user_text):
@@ -212,8 +198,6 @@ def movie_emo_model(user_text):
     recommend_movie(movie_emo_df, user_text)
 
 
-movie_emo_model('i am feeling curious')
-
 
 #already preprocessed data; so will read from csv
 #to see how they get processed... go to 'computation.py'
@@ -242,15 +226,3 @@ def emoroberta_model(user_text):
           emoroberta_df.loc[index, 'emotions'] = 'none'
 
     recommend_movie(emoroberta_df, user_text)
-
-
-
-# def recommend_movie(model_df=None, text=None):
-#     print(text)
-#     pass
-
-
-
-# recommend_movie()
-
-
