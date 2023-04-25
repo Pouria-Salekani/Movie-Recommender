@@ -7,5 +7,4 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('search/', views.search, name='search'),
     path('results/', views.results, name='results'),
-    path('admin/', admin.site.urls),
 ]
