@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 
 
 def home(request):
     return render(request, 'core/home.html')
 
 
-
+@csrf_exempt
 def search(request):
     #1 default
     #2 ekman
