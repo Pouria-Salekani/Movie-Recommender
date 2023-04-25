@@ -14,20 +14,31 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import pipeline
 from core import emotion_model
+
 import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+
+import django
+django.setup()
+
+
+from django.conf import settings
 
 #stores movies
 movies = []
 
 def clean_up_df():
     #read file first
-    dir_path = os.path.abspath("D:/movie_proj/models_csvs")
-    csv_path = os.path.join(dir_path, "movies.csv")
+    # dir_path = os.path.abspath("D:/movie_proj/models_csvs")
+    # csv_path = os.path.join(dir_path, "movies.csv")
 
 
 
     #first read the csv and do some cleaning
-    df = pd.read_csv(csv_path)
+    #df = pd.read_csv(csv_path)
+
+    file_ = open(os.path.join(settings.BASE_DIR, 'movies.csv'))
+    df =  pd.read_csv(file_)
 
     #used for nrclex, emo, and ekman only
     for index, value in df['genres'].items():
@@ -121,11 +132,14 @@ def nrclex_model(user_text):
 
 
 def movie_emo_model(user_text):
-    dir_path = os.path.abspath("D:/movie_proj/models_csvs")
-    csv_path = os.path.join(dir_path, "movies.csv")
+    # dir_path = os.path.abspath("D:/movie_proj/models_csvs")
+    # csv_path = os.path.join(dir_path, "movies.csv")
 
     #movie_emo_df = pd.read_csv('/movie_proj/models_csvs/movies.csv')
-    movie_emo_df = pd.read_csv(csv_path)
+    #movie_emo_df = pd.read_csv(csv_path)
+
+    file_ = open(os.path.join(settings.BASE_DIR, 'movies.csv'))
+    movie_emo_df =  pd.read_csv(file_)
 
     for g in ['genres']:
         movie_emo_df[g] = movie_emo_df[g].fillna('')
@@ -212,11 +226,14 @@ def movie_emo_model(user_text):
 #already preprocessed data; so will read from csv
 #to see how they get processed... go to 'computation.py'
 def ekman_model(user_text):
-    dir_path = os.path.abspath("D:/movie_proj/models_csvs")
-    csv_path = os.path.join(dir_path, "ekman_test.csv")
+    # dir_path = os.path.abspath("D:/movie_proj/models_csvs")
+    # csv_path = os.path.join(dir_path, "ekman_test.csv")
 
     #ekman_df = pd.read_csv('/movie_proj/models_csvs/ekman_test.csv')
-    ekman_df = pd.read_csv(csv_path)
+    #ekman_df = pd.read_csv(csv_path)
+
+    file_ = open(os.path.join(settings.BASE_DIR, 'ekman_test.csv'))
+    ekman_df =  pd.read_csv(file_)
 
     #removing nan's
     for index, value in ekman_df['genres'].items():
@@ -231,11 +248,14 @@ def ekman_model(user_text):
 #read from csv
 #to see how they get processed... go to 'computation.py'
 def emoroberta_model(user_text):
-    dir_path = os.path.abspath("D:/movie_proj/models_csvs")
-    csv_path = os.path.join(dir_path, "emo_test.csv")
+    # dir_path = os.path.abspath("D:/movie_proj/models_csvs")
+    # csv_path = os.path.join(dir_path, "emo_test.csv")
 
     #emoroberta_df = pd.read_csv('/movie_proj/models_csvs/emo_test.csv')
-    emoroberta_df = pd.read_csv(csv_path)
+    #emoroberta_df = pd.read_csv(csv_path)
+
+    file_ = open(os.path.join(settings.BASE_DIR, 'emo_test.csv'))
+    emoroberta_df =  pd.read_csv(file_)
 
     #removing nan's
     for index, value in emoroberta_df['genres'].items():
