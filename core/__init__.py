@@ -6,5 +6,6 @@ emotion_model = pipeline('sentiment-analysis',
                         model='arpanghoshal/EmoRoBERTa')
 
 
+#will automatically download required corupus
 subprocess.run(["python", "-m", "textblob.download_corpora"])
 
