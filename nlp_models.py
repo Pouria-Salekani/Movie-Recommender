@@ -112,11 +112,14 @@ def recommend_movie(model_df, text):
 def nrclex_model(user_text):
     nrc_df = clean_up_df()
 
-    import nltk
-    import subprocess
-    nltk.download('punkt')
+    # import nltk
+    # import subprocess
+    # nltk.download('punkt')
 
-    subprocess.run(["python", "-m", "textblob.download_corpora"])
+    # subprocess.run(["python", "-m", "textblob.download_corpora"])
+
+    #this one is having problems since it is relying on NLTK stuff....
+    #might have to replace this with NLTK or TextBlob, something that does NOT download something else
 
 
     for index, value in nrc_df['genres'].items():
