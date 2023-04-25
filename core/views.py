@@ -1,20 +1,8 @@
 from django.shortcuts import render, redirect
-import pandas as pd
-import json
 
 
 def home(request):
-
-    df = pd.read_csv('models_csvs/final_results.csv')
-    df = df.drop('Unnamed: 0', axis=1)
-
-    table_html = df.to_html()
-
-    if request.method == 'POST':
-        print('form submitted')
-
-
-    return render(request, 'home.html', {'table_html':table_html})
+    return render(request, 'core/home.html')
 
 
 
@@ -62,15 +50,11 @@ def search(request):
             return redirect('results')
 
 
-    return render(request, 'search.html')
+    return render(request, 'core/search.html')
 
 
 
 def results(request):
-    #items_json = request.GET.get('items')
-    #movies = json.loads(items_json)
     movies = request.session.get('movies')
-    print('MOVIESSSSSSS ', movies)
-    return render(request, 'results.html', {'movies':movies})
+    return render(request, 'core/results.html', {'movies':movies})
 
-#TODO: install SASS onto system
