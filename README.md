@@ -145,11 +145,19 @@ The "emotions" assigned to those "genres" are not random. Those emotions coincid
 I chose to construct my algorithm like that because the algorithm works very well with the [EmoRoberta](#emoroberta), *again, you can see the accuracy scores here: [Accuracy Score](#accuracy-score)*
 <br>
 
-I could have used the `NLTK Python` library and maybe `TextBlob`, however, after tesing it out in **Google Colabs** the results were tremendously terrible. Moreover, using the `NLTK` to read *genres* would mostly return some "neutral" value or **neutral** itself.
+I could have used the `NLTK Python` library and maybe `TextBlob`, however, after tesing it out in **Google Colabs** the results were tremendously terrible. Moreover, using the `NLTK` to read *genres* would mostly return **"neutral"** value.
 <br>
 
-In addition, I thought of reading the ***movie description*** which is around 2-3 sentences and conjure up an emotion based off of that, but that did not work either. I tried using stopwords, lemmatizing, and stemming, and more. Another thing to note, *"we	 did	 not	 use	 stemming	 of	 words	 as	 some	
+In addition, I thought of reading the ***movie description*** which is around 2-3 sentences and conjure up an emotion based off of that, but that did not work either. I tried using stopwords, lemmatizing, and stemming, and more. 
+<br>
+
+Another thing to note, *"we	 did	 not	 use	 stemming	 of	 words	 as	 some	
 information is	lost while	stemming	a word	to	its	root	form"* (reference: https://cseweb.ucsd.edu/classes/wi15/cse255-a/reports/fa15/003.pdf)
+So even if I did stem the words, the `NLTK` library most likely would have had a hard time giving an accurate representation.
+<br>
+
+***BONUS***:
+I tried using IBM Watson Tone Analyze but it performed a little bit better than NRCLex. I did not include it here because there are limited API calls to use IBM Watson. 
 
 
 ### EmoRoberta
@@ -283,16 +291,110 @@ Below is an image to show the accuracy score for all 4 models.
 
 ![download](https://user-images.githubusercontent.com/27398502/234398026-7a3da3d0-7ed7-4997-8ebe-456723f9d091.png)
 
+Here is the *csv* if you're interested: [final_results.csv](https://github.com/Pouria-Salekani/Movie-Recommender/files/11328083/final_results.csv)
 
 
 
 
+## Limitations
+
+Of course, there are limitations. The most important being is that ***these models do NOT always return the right emotion and emotion is subjective***. Some of us associate *horror* movies as "fun" and some as "scary".
+
+Another limitation is that these models read the *genre* and come up with an emotion, however, just reading a genre on its own, such as, *Action* or *Adventure* is difficult, how would one expect a model associate an emotion based off of a genre of movie?
+
+
+Last limitation is that these models have been exposed to only a handful of emotions. If the emotion *keyword* you're feeling is not in one of the corpus of the models, then the models will give out "neutral" or the wrong emotion. For example, if you type in: **I am feeling quirky** 3 out of the 4 models might give you the wrong emotion associated with the word: *quirky*.
+
+
+## Computation
+
+Over here I will describe how the emoRoberta and ekman were used to read off of the *genres* in the ***movies.csv***. If you're interested in the other computations, such as "my algorithm" and "NRCLex", check `nlp_models.py`. Other than that, this code can be found at `computation.py`.
+
+
+```python
+
+import pandas as pd
+from transformers import RobertaTokenizerFast, TFRobertaForSequenceClassification, pipeline
+
+
+#first convert each genre into a 'feeling' (also called it 'cleaning up data')
+def convert_to_feeling():
+    df = pd.read_csv('/content/movies.csv')
+
+    for g in df['genres']:
+        if not g:
+            df[g] = df[g].fillna('')
+
+
+    for index, value in df['genres'].items():
+        if not pd.isna(value):
+            ex1 = value.split()
+            if ex1:
+                if len(ex1) > 1 and ex1[1] == 'am':
+                    continue
+                else:
+                    df.loc[index, 'genres'] = 'I am feeling ' + ex1[0].lower()
+
+
+    df['emotions'] = None
+
+
+    return df
+
+
+def emoroberta_processing():
+    lvg = convert_to_feeling()
+
+    tokenizer = RobertaTokenizerFast.from_pretrained("arpanghoshal/EmoRoBERTa")
+    model = TFRobertaForSequenceClassification.from_pretrained("arpanghoshal/EmoRoBERTa")
+
+    emotion = pipeline('sentiment-analysis', 
+                        model='arpanghoshal/EmoRoBERTa')
+    
+    for index, value in lvg['genres'].items():
+        if not pd.isna(value):
+            emotion_labels = emotion(value)
+            emotionz = emotion_labels[0]['label']
+            lvg.loc[index, 'emotions'] = emotionz
+
+    #this is the same .csv in this project
+    lvg.to_csv('emo_test.csv', index=False)
+
+
+def ekman_processing():
+    bhj = convert_to_feeling()
+
+    ekman = pipeline('sentiment-analysis', model='arpanghoshal/EkmanClassifier')
+    for index, value in bhj['genres'].items():
+        if not pd.isna(value):
+            ekman_labels = ekman(value)
+            emotions = ekman_labels[0]['label']
+            bhj.loc[index, 'emotions'] = emotions
+
+    #this is the same .csv in this project
+    bhj.to_csv('ekman_test.csv', index=False)
 
 
 
+```
+
+
+## Movie Dataset
+
+Please note that the movies that you get recommended are from a **DATASET THAT DOES NOT GET UPDATED**, so, more than likely, you won't see any movies past ~2018. This is the data: [movies.csv](https://github.com/Pouria-Salekani/Movie-Recommender/files/11328063/movies.csv)
+
+
+## Credits and References
+
+Last but not least, got to give credit where credit is due.
+
+* The reference article used over at [Alternative](#alternative): https://cseweb.ucsd.edu/classes/wi15/cse255-a/reports/fa15/003.pdf, by Ankit Goyal & Amey Parulekar
+* I used NRCLex, citing the paper: Crowdsourcing a Word-Emotion Association Lexicon, Saif Mohammad and Peter Turney, Computational Intelligence, 29 (3), 436-465, 2013
+* Thank you https://huggingface.co/arpanghoshal for the https://huggingface.co/arpanghoshal/EmoRoBERTa and https://huggingface.co/arpanghoshal/EkmanClassifier
 
 
 
+© 2023 Pouria Salekani. `All Rights Reserved.`
 
 
 
