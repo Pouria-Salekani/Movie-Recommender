@@ -3,7 +3,7 @@ import subprocess
 
 global emotion_model
 emotion_model = pipeline('sentiment-analysis', 
-                        model='arpanghoshal/EmoRoBERTa')
+                        model='arpanghoshal/EmoRoBERTa', use_auth_token=True)
 
 
 #will automatically download required corupus
