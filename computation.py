@@ -39,11 +39,14 @@ def convert_to_feeling():
 def emoroberta_processing():
     lvg = convert_to_feeling()
 
-    tokenizer = RobertaTokenizerFast.from_pretrained("arpanghoshal/EmoRoBERTa")
-    model = TFRobertaForSequenceClassification.from_pretrained("arpanghoshal/EmoRoBERTa")
+    tokenizer = RobertaTokenizerFast.from_pretrained("arpanghoshal/EmoRoBERTa", use_auth_token=True)
+    model = TFRobertaForSequenceClassification.from_pretrained("arpanghoshal/EmoRoBERTa", use_auth_token=True)
 
     emotion = pipeline('sentiment-analysis', 
                         model='arpanghoshal/EmoRoBERTa')
+    
+    emotion_labels = emotion("Thanks for using it.")
+    print(emotion_labels)
     
     for index, value in lvg['genres'].items():
         if not pd.isna(value):
@@ -69,4 +72,4 @@ def ekman_processing():
     bhj.to_csv('ekman_test.csv', index=False)
 
 
-
+emoroberta_processing()
