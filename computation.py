@@ -72,4 +72,4 @@ def ekman_processing():
     bhj.to_csv('ekman_test.csv', index=False)
 
 
-emoroberta_processing()
+# emoroberta_processing()
