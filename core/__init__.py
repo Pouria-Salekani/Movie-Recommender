@@ -3,7 +3,7 @@ import subprocess
 
 global emotion_model
 emotion_model = pipeline('sentiment-analysis', 
-                        model='arpanghoshal/EmoRoBERTa', use_auth_token='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')
+                        model='arpanghoshal/EmoRoBERTa', use_auth_token='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')
 
 
 
