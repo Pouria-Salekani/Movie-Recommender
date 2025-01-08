@@ -11,7 +11,7 @@ else:
     print(f"HF_AUTH_TOKEN found, starts with: {HF_AUTH_TOKEN[:10]}...")
 global emotion_model
 emotion_model = pipeline('sentiment-analysis', 
-                        model='arpanghoshal/EmoRoBERTa', use_auth_token=HF_AUTH_TOKEN)
+                        model='arpanghoshal/EmoRoBERTa')
 
 
 #will automatically download required corupus
